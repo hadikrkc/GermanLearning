@@ -1,0 +1,56 @@
+# Dev ortami - hot reload'lu, koda volume mount ile baglanir.
+# Postgres zaten host uzerinde Docker'da calisiyor; burada yeniden acmiyoruz.
+# api container'i host.docker.internal uzerinden 5432 portuna ulasir.
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile.dev
+    container_name: almanca_api_dev
+    env_file:
+      - ./apps/api/.env
+    environment:
+      NODE_ENV: development
+      API_PORT: 3000
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./apps/api/src:/repo/apps/api/src
+      - ./apps/api/prisma:/repo/apps/api/prisma
+      - ./apps/api/test:/repo/apps/api/test
+      - ./apps/api/tsconfig.json:/repo/apps/api/tsconfig.json
+      - ./apps/api/nest-cli.json:/repo/apps/api/nest-cli.json
+      - ./packages/shared/src:/repo/packages/shared/src
+      - api_node_modules:/repo/apps/api/node_modules
+      - root_node_modules:/repo/node_modules
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile.dev
+    container_name: almanca_web_dev
+    env_file:
+      - ./apps/web/.env
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./apps/web/src:/repo/apps/web/src
+      - ./apps/web/public:/repo/apps/web/public
+      - ./apps/web/index.html:/repo/apps/web/index.html
+      - ./apps/web/vite.config.js:/repo/apps/web/vite.config.js
+      - ./apps/web/tailwind.config.js:/repo/apps/web/tailwind.config.js
+      - ./apps/web/postcss.config.js:/repo/apps/web/postcss.config.js
+      - ./packages/shared/src:/repo/packages/shared/src
+      - web_node_modules:/repo/apps/web/node_modules
+    depends_on:
+      - api
+    restart: unless-stopped
+
+volumes:
+  api_node_modules:
+  root_node_modules:
+  web_node_modules:

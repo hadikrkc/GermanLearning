@@ -1,0 +1,14 @@
+# -------- Development with Vite dev server --------
+FROM node:20-alpine
+RUN corepack enable && corepack prepare pnpm@9.12.0 --activate
+WORKDIR /repo
+
+COPY package.json pnpm-lock.yaml* pnpm-workspace.yaml ./
+COPY apps/web/package.json ./apps/web/
+COPY packages/shared/package.json ./packages/shared/
+RUN pnpm install
+
+WORKDIR /repo/apps/web
+EXPOSE 5173
+
+CMD ["pnpm", "dev"]

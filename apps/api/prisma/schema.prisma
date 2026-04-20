@@ -1,0 +1,21 @@
+// Prisma schema - Sprint 0 iskelet
+// Tum modeller Sprint 1'den itibaren eklenecek (veritabani_semasi.txt referans).
+// Bu dosya su an sadece generator + datasource + minimal marker icerir.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Sprint 0 marker - migration uretmek icin minimal model.
+// Sprint 1'de User modeli eklenince bu kaldirilabilir.
+model HealthCheck {
+  id        String   @id @default(cuid())
+  checkedAt DateTime @default(now())
+
+  @@map("health_check")
+}

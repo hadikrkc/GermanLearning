@@ -1,0 +1,28 @@
+{
+  "name": "almanca-ogrenme",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Almanca ogrenme uygulamasi - monorepo",
+  "packageManager": "pnpm@9.12.0",
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "scripts": {
+    "dev": "pnpm --parallel --filter \"./apps/*\" dev",
+    "build": "pnpm -r build",
+    "lint": "pnpm -r lint",
+    "test": "pnpm -r test",
+    "typecheck": "pnpm -r typecheck",
+    "prisma:generate": "pnpm --filter api prisma:generate",
+    "prisma:migrate": "pnpm --filter api prisma:migrate",
+    "prisma:seed": "pnpm --filter api prisma:seed",
+    "docker:dev": "docker compose -f docker-compose.dev.yml up --build",
+    "docker:dev:down": "docker compose -f docker-compose.dev.yml down",
+    "docker:prod": "docker compose up --build",
+    "docker:prod:down": "docker compose down"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.4"
+  }
+}

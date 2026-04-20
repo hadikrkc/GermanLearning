@@ -1,0 +1,32 @@
+# Production benzeri lokal test.
+# api ve web multi-stage build ile calisir. Host'taki Postgres kullanilir.
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    container_name: almanca_api
+    env_file:
+      - ./apps/api/.env
+    environment:
+      NODE_ENV: production
+      API_PORT: 3000
+    ports:
+      - "3000:3000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+      args:
+        VITE_API_URL: http://localhost/api/v1
+    container_name: almanca_web
+    ports:
+      - "80:80"
+    depends_on:
+      - api
+    restart: unless-stopped

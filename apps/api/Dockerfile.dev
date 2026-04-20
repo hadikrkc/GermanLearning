@@ -1,0 +1,19 @@
+# -------- Development with hot reload --------
+FROM node:20-alpine
+RUN corepack enable && corepack prepare pnpm@9.12.0 --activate
+RUN apk add --no-cache openssl
+
+WORKDIR /repo
+
+# Bagimliliklari once yukle, sonra kod volume ile mount edilir.
+COPY package.json pnpm-lock.yaml* pnpm-workspace.yaml ./
+COPY apps/api/package.json ./apps/api/
+COPY packages/shared/package.json ./packages/shared/
+RUN pnpm install
+
+# Prisma binary platform farki icin generate'i container icinde yaptiriyoruz.
+WORKDIR /repo/apps/api
+EXPOSE 3000
+
+# Kod docker-compose.dev.yml'de volume ile mount edilir.
+CMD ["sh", "-c", "pnpm prisma generate && pnpm dev"]
