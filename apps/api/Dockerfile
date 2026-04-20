@@ -12,7 +12,6 @@ RUN pnpm install --frozen-lockfile || pnpm install
 FROM base AS build
 COPY --from=deps /repo/node_modules ./node_modules
 COPY --from=deps /repo/apps/api/node_modules ./apps/api/node_modules
-COPY --from=deps /repo/packages/shared/node_modules ./packages/shared/node_modules 2>/dev/null || true
 COPY . .
 WORKDIR /repo/apps/api
 RUN pnpm prisma generate
@@ -20,15 +19,13 @@ RUN pnpm build
 
 FROM node:20-alpine AS runtime
 RUN corepack enable && corepack prepare pnpm@9.12.0 --activate
-WORKDIR /app
+RUN apk add --no-cache openssl
 ENV NODE_ENV=production
 
-COPY --from=build /repo/apps/api/package.json ./package.json
-COPY --from=build /repo/apps/api/dist ./dist
-COPY --from=build /repo/apps/api/prisma ./prisma
-COPY --from=build /repo/apps/api/node_modules ./node_modules
-COPY --from=build /repo/node_modules/.prisma ./node_modules/.prisma
-COPY --from=build /repo/node_modules/@prisma ./node_modules/@prisma
+# pnpm'in symlink yapisini bozmamak icin tum /repo'yu kopyaliyoruz.
+# Sonradan pnpm deploy ile slim image uretebiliriz; MVP icin bu yeterli.
+COPY --from=build /repo /repo
+WORKDIR /repo/apps/api
 
 EXPOSE 3000
-CMD ["node", "dist/main.js"]
+CMD ["sh", "-c", "pnpm exec prisma migrate deploy && node dist/main.js"]
