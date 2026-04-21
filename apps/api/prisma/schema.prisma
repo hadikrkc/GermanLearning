@@ -1,6 +1,5 @@
-// Prisma schema - Sprint 0 iskelet
-// Tum modeller Sprint 1'den itibaren eklenecek (veritabani_semasi.txt referans).
-// Bu dosya su an sadece generator + datasource + minimal marker icerir.
+// Prisma schema - Sprint 1
+// veritabani_semasi.txt referans alinmistir.
 
 generator client {
   provider      = "prisma-client-js"
@@ -13,11 +12,136 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-// Sprint 0 marker - migration uretmek icin minimal model.
-// Sprint 1'de User modeli eklenince bu kaldirilabilir.
-model HealthCheck {
-  id        String   @id @default(cuid())
-  checkedAt DateTime @default(now())
+// ============================================================
+// ENUMS
+// ============================================================
 
-  @@map("health_check")
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum ContentStatus {
+  DRAFT
+  ACTIVE
+  INACTIVE
+}
+
+enum CefrMainLevel {
+  A1
+  A2
+  B1
+  B2
+  C1
+  C2
+}
+
+// ============================================================
+// MODELS
+// ============================================================
+
+model User {
+  id              String    @id @default(cuid())
+  email           String    @unique
+  passwordHash    String
+  role            UserRole  @default(USER)
+  displayName     String?
+  dailyGoalCount  Int       @default(10)
+  isActive        Boolean   @default(true)
+  lastLoginAt     DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  userLevels     UserLevel[]
+  refreshTokens  RefreshToken[]
+
+  @@index([createdAt])
+  @@map("user")
+}
+
+model RefreshToken {
+  id         String    @id @default(cuid())
+  userId     String
+  tokenHash  String
+  userAgent  String?
+  ipAddress  String?
+  expiresAt  DateTime
+  revokedAt  DateTime?
+  createdAt  DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@map("refresh_token")
+}
+
+model Level {
+  id           String        @id @default(cuid())
+  code         CefrMainLevel @unique
+  displayName  String
+  sortOrder    Int
+  isActive     Boolean       @default(true)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  subLevels SubLevel[]
+  topics    Topic[]
+
+  @@map("level")
+}
+
+model SubLevel {
+  id           String   @id @default(cuid())
+  levelId      String
+  code         String   @unique
+  displayName  String
+  sortOrder    Int
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  level      Level       @relation(fields: [levelId], references: [id])
+  topics     Topic[]
+  userLevels UserLevel[]
+
+  @@index([levelId])
+  @@map("sub_level")
+}
+
+model UserLevel {
+  id          String   @id @default(cuid())
+  userId      String
+  subLevelId  String
+  isPrimary   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subLevel SubLevel @relation(fields: [subLevelId], references: [id])
+
+  @@unique([userId, subLevelId])
+  @@index([userId])
+  @@map("user_level")
+}
+
+model Topic {
+  id           String        @id @default(cuid())
+  subLevelId   String
+  levelId      String
+  slug         String        @unique
+  displayName  String
+  description  String?       @db.Text
+  sortOrder    Int
+  status       ContentStatus @default(DRAFT)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  deletedAt    DateTime?
+
+  subLevel SubLevel @relation(fields: [subLevelId], references: [id])
+  level    Level    @relation(fields: [levelId], references: [id])
+
+  @@index([subLevelId])
+  @@index([levelId])
+  @@index([status])
+  @@map("topic")
 }
