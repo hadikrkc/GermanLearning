@@ -17,8 +17,8 @@ export class RegisterDto {
   @IsString()
   displayName?: string;
 
-  @ApiPropertyOptional({ enum: [UserRole.USER, UserRole.TEACHER] })
+  @ApiPropertyOptional({ enum: [UserRole.STUDENT, UserRole.TEACHER] })
   @IsOptional()
-  @IsEnum([UserRole.USER, UserRole.TEACHER])
+  @IsEnum([UserRole.STUDENT, UserRole.TEACHER])
   role?: UserRole;
 }

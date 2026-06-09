@@ -35,7 +35,7 @@ export class AuthService {
         email: dto.email,
         passwordHash,
         displayName: dto.displayName,
-        role: dto.role ?? UserRole.USER,
+        role: dto.role ?? UserRole.STUDENT,
       },
       select: { id: true, email: true, role: true, displayName: true, createdAt: true },
     });

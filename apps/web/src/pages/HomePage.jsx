@@ -15,7 +15,7 @@ export default function HomePage() {
     }
   }
 
-  const roleLabel = { USER: 'Student', TEACHER: 'Teacher', ADMIN: 'Admin' }[user?.role] ?? '';
+  const roleLabel = { STUDENT: 'Student', TEACHER: 'Teacher', ADMIN: 'Admin' }[user?.role] ?? '';
 
   return (
     <div className="min-h-screen bg-gray-50">

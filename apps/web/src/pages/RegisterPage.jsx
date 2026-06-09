@@ -12,7 +12,7 @@ const schema = z
     email: z.string().email('Please enter a valid email address'),
     password: z.string().min(8, 'Password must be at least 8 characters'),
     confirmPassword: z.string(),
-    role: z.enum(['USER', 'TEACHER']).default('USER'),
+    role: z.enum(['STUDENT', 'TEACHER']).default('STUDENT'),
   })
   .refine((d) => d.password === d.confirmPassword, {
     message: 'Passwords do not match',
@@ -28,7 +28,7 @@ export default function RegisterPage() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm({ resolver: zodResolver(schema), defaultValues: { role: 'USER' } });
+  } = useForm({ resolver: zodResolver(schema), defaultValues: { role: 'STUDENT' } });
 
   async function onSubmit(values) {
     setError('');
@@ -113,7 +113,7 @@ export default function RegisterPage() {
               {...register('role')}
               className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              <option value="USER">Student</option>
+              <option value="STUDENT">Student</option>
               <option value="TEACHER">Teacher</option>
             </select>
           </div>

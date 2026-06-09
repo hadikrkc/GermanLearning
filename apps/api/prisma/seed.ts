@@ -11,64 +11,63 @@ const CEFR_LEVELS: Array<{
 }> = [
   {
     code: 'A1',
-    displayName: 'A1 — Başlangıç',
+    displayName: 'A1 — Beginner',
     sortOrder: 1,
     subLevels: [
-      { code: 'A1.1', displayName: 'A1.1 — Temel Başlangıç', sortOrder: 1 },
-      { code: 'A1.2', displayName: 'A1.2 — Başlangıç+', sortOrder: 2 },
+      { code: 'A1.1', displayName: 'A1.1 — Absolute Beginner', sortOrder: 1 },
+      { code: 'A1.2', displayName: 'A1.2 — Beginner+', sortOrder: 2 },
     ],
   },
   {
     code: 'A2',
-    displayName: 'A2 — Temel',
+    displayName: 'A2 — Elementary',
     sortOrder: 2,
     subLevels: [
-      { code: 'A2.1', displayName: 'A2.1 — Temel 1', sortOrder: 1 },
-      { code: 'A2.2', displayName: 'A2.2 — Temel 2', sortOrder: 2 },
+      { code: 'A2.1', displayName: 'A2.1 — Elementary 1', sortOrder: 1 },
+      { code: 'A2.2', displayName: 'A2.2 — Elementary 2', sortOrder: 2 },
     ],
   },
   {
     code: 'B1',
-    displayName: 'B1 — Orta Öncesi',
+    displayName: 'B1 — Pre-Intermediate',
     sortOrder: 3,
     subLevels: [
-      { code: 'B1.1', displayName: 'B1.1 — Orta Öncesi 1', sortOrder: 1 },
-      { code: 'B1.2', displayName: 'B1.2 — Orta Öncesi 2', sortOrder: 2 },
+      { code: 'B1.1', displayName: 'B1.1 — Pre-Intermediate 1', sortOrder: 1 },
+      { code: 'B1.2', displayName: 'B1.2 — Pre-Intermediate 2', sortOrder: 2 },
     ],
   },
   {
     code: 'B2',
-    displayName: 'B2 — Orta',
+    displayName: 'B2 — Intermediate',
     sortOrder: 4,
     subLevels: [
-      { code: 'B2.1', displayName: 'B2.1 — Orta 1', sortOrder: 1 },
-      { code: 'B2.2', displayName: 'B2.2 — Orta 2', sortOrder: 2 },
+      { code: 'B2.1', displayName: 'B2.1 — Intermediate 1', sortOrder: 1 },
+      { code: 'B2.2', displayName: 'B2.2 — Intermediate 2', sortOrder: 2 },
     ],
   },
   {
     code: 'C1',
-    displayName: 'C1 — Üst Orta',
+    displayName: 'C1 — Upper-Intermediate',
     sortOrder: 5,
     subLevels: [
-      { code: 'C1.1', displayName: 'C1.1 — Üst Orta 1', sortOrder: 1 },
-      { code: 'C1.2', displayName: 'C1.2 — Üst Orta 2', sortOrder: 2 },
+      { code: 'C1.1', displayName: 'C1.1 — Upper-Intermediate 1', sortOrder: 1 },
+      { code: 'C1.2', displayName: 'C1.2 — Upper-Intermediate 2', sortOrder: 2 },
     ],
   },
   {
     code: 'C2',
-    displayName: 'C2 — İleri',
+    displayName: 'C2 — Advanced',
     sortOrder: 6,
     subLevels: [
-      { code: 'C2.1', displayName: 'C2.1 — İleri 1', sortOrder: 1 },
-      { code: 'C2.2', displayName: 'C2.2 — İleri 2', sortOrder: 2 },
+      { code: 'C2.1', displayName: 'C2.1 — Advanced 1', sortOrder: 1 },
+      { code: 'C2.2', displayName: 'C2.2 — Advanced 2', sortOrder: 2 },
     ],
   },
 ];
 
 async function main() {
-  console.log('🌱 Seed başlıyor...');
+  console.log('Seeding database...');
 
-  // CEFR Levels + SubLevels
   for (const levelData of CEFR_LEVELS) {
     const level = await prisma.level.upsert({
       where: { code: levelData.code },
@@ -92,16 +91,16 @@ async function main() {
         },
       });
     }
-    console.log(`  ✓ ${levelData.code} + ${levelData.subLevels.length} alt seviye`);
+    console.log(`  ✓ ${levelData.code} (${levelData.subLevels.length} sublevels)`);
   }
 
-  // Sample Topics for A1.1
+  // Sample topics for A1.1
   const a11 = await prisma.subLevel.findUnique({ where: { code: 'A1.1' } });
   const a1 = await prisma.level.findUnique({ where: { code: 'A1' } });
   if (a11 && a1) {
     const sampleTopics = [
       { slug: 'a1-1-artikel', displayName: 'Artikel (der/die/das)', sortOrder: 1 },
-      { slug: 'a1-1-zahlen', displayName: 'Zahlen (Sayılar)', sortOrder: 2 },
+      { slug: 'a1-1-zahlen', displayName: 'Zahlen (Numbers)', sortOrder: 2 },
     ];
     for (const topic of sampleTopics) {
       await prisma.topic.upsert({
@@ -117,11 +116,10 @@ async function main() {
         },
       });
     }
-    console.log('  ✓ A1.1 örnek konular');
+    console.log('  ✓ A1.1 sample topics');
   }
 
-  // GLS-152 Admin Account
-  const adminEmail = process.env.SEED_ADMIN_EMAIL ?? 'admin@almanca.local';
+  const adminEmail = process.env.SEED_ADMIN_EMAIL ?? 'admin@germanlearning.local';
   const adminPassword = process.env.SEED_ADMIN_PASSWORD ?? 'admin12345';
   const passwordHash = await bcrypt.hash(adminPassword, 12);
 
@@ -135,14 +133,14 @@ async function main() {
       displayName: 'Platform Admin',
     },
   });
-  console.log(`  ✓ Admin kullanıcı: ${adminEmail}`);
+  console.log(`  ✓ Admin user: ${adminEmail}`);
 
-  console.log('✅ Seed tamamlandı.');
+  console.log('Seeding complete.');
 }
 
 main()
   .catch((e) => {
-    console.error('Seed hatası:', e);
+    console.error('Seed error:', e);
     process.exit(1);
   })
   .finally(() => prisma.$disconnect());
