@@ -3,6 +3,8 @@ import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { Logger } from 'nestjs-pino';
 import helmet from 'helmet';
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const cookieParser = require('cookie-parser');
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -10,6 +12,7 @@ async function bootstrap() {
 
   app.useLogger(app.get(Logger));
   app.use(helmet());
+  app.use(cookieParser());
 
   app.setGlobalPrefix('api');
   app.enableVersioning({
