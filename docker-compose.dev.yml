@@ -7,7 +7,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: mysecretpassword
-      POSTGRES_DB: almanca_dev
+      POSTGRES_DB: german_learning_db
     ports:
       - "5432:5432"
     volumes:
@@ -28,8 +28,8 @@ services:
     environment:
       NODE_ENV: development
       API_PORT: 3000
-      DATABASE_URL: postgresql://postgres:mysecretpassword@postgres:5432/almanca_dev?schema=public
-      DIRECT_URL: postgresql://postgres:mysecretpassword@postgres:5432/almanca_dev?schema=public
+      DATABASE_URL: postgresql://postgres:mysecretpassword@postgres:5432/german_learning_db?schema=public
+      DIRECT_URL: postgresql://postgres:mysecretpassword@postgres:5432/german_learning_db?schema=public
     ports:
       - "3000:3000"
     volumes:
