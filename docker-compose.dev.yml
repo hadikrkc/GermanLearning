@@ -9,7 +9,7 @@ services:
       POSTGRES_PASSWORD: mysecretpassword
       POSTGRES_DB: german_learning_db
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -61,7 +61,6 @@ services:
       - ./apps/web/index.html:/repo/apps/web/index.html
       - ./apps/web/vite.config.js:/repo/apps/web/vite.config.js
       - ./apps/web/tailwind.config.js:/repo/apps/web/tailwind.config.js
-      - ./apps/web/postcss.config.js:/repo/apps/web/postcss.config.js
       - ./packages/shared/src:/repo/packages/shared/src
       - web_node_modules:/repo/apps/web/node_modules
     depends_on:

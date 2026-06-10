@@ -1,19 +1,21 @@
 import axios from 'axios';
-import { useAuthStore } from '../store/auth.store';
+import { setToken, signOutSuccess } from 'store/slices/authSlice';
 
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL ?? 'http://localhost:3000/api/v1',
-  withCredentials: true, // httpOnly refresh cookie
+  withCredentials: true,
 });
 
-// Inject access token
+// Injected by main.jsx to avoid circular dependency (store → authSlice → authApi → client)
+let _store;
+export const injectStore = (store) => { _store = store; };
+
 api.interceptors.request.use((config) => {
-  const token = useAuthStore.getState().accessToken;
+  const token = _store?.getState().auth.token;
   if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
 
-// Auto-refresh on 401
 let refreshing = false;
 let queue = [];
 
@@ -39,12 +41,12 @@ api.interceptors.response.use(
         {},
         { withCredentials: true },
       );
-      useAuthStore.getState().setAccessToken(data.accessToken);
+      _store?.dispatch(setToken(data.accessToken));
       queue.forEach((fn) => fn());
       queue = [];
       return api(original);
     } catch {
-      useAuthStore.getState().logout();
+      _store?.dispatch(signOutSuccess());
       return Promise.reject(error);
     } finally {
       refreshing = false;

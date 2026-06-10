@@ -51,3 +51,6 @@ docs/
 
 # Claude Code lokal ayarlar
 .claude/settings.local.json
+
+# Local task tracking
+TODO.md

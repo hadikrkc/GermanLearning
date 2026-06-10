@@ -1,0 +1,42 @@
+[
+	{
+		"name": "Erin Gonzales",
+		"descKey": "notification.desc.boardComment",
+		"img": "thumb-1.jpg",
+		"icon": "",
+		"time": "7:57PM",
+		"type": ""
+	},
+	{
+		"name": "Frederick Adams",
+		"descKey": "notification.desc.mentionedInPost",
+		"img": "thumb-8.jpg",
+		"icon": "",
+		"time": "3:12PM",
+		"type": ""
+	},
+	{
+		"name": "",
+		"descKey": "notification.desc.newMessage",
+		"img": "",
+		"icon": "mail",
+		"time": "11:38AM",
+		"type": "info"
+	},
+	{
+		"name": "Carolyn Hanson",
+		"descKey": "notification.desc.invitedToProject",
+		"img": "thumb-9.jpg",
+		"icon": "",
+		"time": "9:42AM",
+		"type": ""
+	},
+	{
+		"name": "",
+		"descKey": "notification.desc.dailyReport",
+		"img": "",
+		"icon": "alert",
+		"time": "7:57AM",
+		"type": "danger"
+	}
+]

@@ -121,19 +121,45 @@ async function main() {
 
   const adminEmail = process.env.SEED_ADMIN_EMAIL ?? 'admin@germanlearning.local';
   const adminPassword = process.env.SEED_ADMIN_PASSWORD ?? 'admin12345';
-  const passwordHash = await bcrypt.hash(adminPassword, 12);
-
   await prisma.user.upsert({
     where: { email: adminEmail },
     update: {},
     create: {
       email: adminEmail,
-      passwordHash,
+      passwordHash: await bcrypt.hash(adminPassword, 12),
       role: UserRole.ADMIN,
       displayName: 'Platform Admin',
     },
   });
   console.log(`  ✓ Admin user: ${adminEmail}`);
+
+  const teacherEmail = process.env.SEED_TEACHER_EMAIL ?? 'teacher@germanlearning.local';
+  const teacherPassword = process.env.SEED_TEACHER_PASSWORD ?? 'teacher12345';
+  await prisma.user.upsert({
+    where: { email: teacherEmail },
+    update: {},
+    create: {
+      email: teacherEmail,
+      passwordHash: await bcrypt.hash(teacherPassword, 12),
+      role: UserRole.TEACHER,
+      displayName: 'Demo Teacher',
+    },
+  });
+  console.log(`  ✓ Teacher user: ${teacherEmail}`);
+
+  const studentEmail = process.env.SEED_STUDENT_EMAIL ?? 'student@germanlearning.local';
+  const studentPassword = process.env.SEED_STUDENT_PASSWORD ?? 'student12345';
+  await prisma.user.upsert({
+    where: { email: studentEmail },
+    update: {},
+    create: {
+      email: studentEmail,
+      passwordHash: await bcrypt.hash(studentPassword, 12),
+      role: UserRole.STUDENT,
+      displayName: 'Demo Student',
+    },
+  });
+  console.log(`  ✓ Student user: ${studentEmail}`);
 
   console.log('Seeding complete.');
 }
