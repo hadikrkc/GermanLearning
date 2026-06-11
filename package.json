@@ -2,7 +2,7 @@
   "name": "almanca-ogrenme",
   "version": "0.1.0",
   "private": true,
-  "description": "Almanca ogrenme uygulamasi - monorepo",
+  "description": "German Learning uygulamasi - monorepo",
   "packageManager": "pnpm@9.12.0",
   "engines": {
     "node": ">=20.0.0",

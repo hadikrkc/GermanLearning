@@ -2,7 +2,7 @@
   "name": "api",
   "version": "0.1.0",
   "private": true,
-  "description": "Almanca ogrenme API (NestJS)",
+  "description": "German Learning API (NestJS)",
   "scripts": {
     "dev": "nest start --watch",
     "build": "nest build",

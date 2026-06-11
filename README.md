@@ -1,4 +1,4 @@
-# Almanca Ogrenme Uygulamasi
+# German Learning Uygulamasi
 
 Kurs sonrasi tekrar ve hata odakli pratik platformu. Detayli planlama icin:
 

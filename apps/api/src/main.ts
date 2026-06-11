@@ -1,11 +1,11 @@
-import { NestFactory } from '@nestjs/core';
 import { ValidationPipe, VersioningType } from '@nestjs/common';
+import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { Logger } from 'nestjs-pino';
 import helmet from 'helmet';
+import { Logger } from 'nestjs-pino';
+import { AppModule } from './app.module';
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const cookieParser = require('cookie-parser');
-import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { bufferLogs: true });
@@ -35,8 +35,8 @@ async function bootstrap() {
   });
 
   const swaggerConfig = new DocumentBuilder()
-    .setTitle('Almanca Ogrenme API')
-    .setDescription('Almanca ogrenme uygulamasi REST API')
+    .setTitle('German Learning API')
+    .setDescription('German Learning uygulamasi REST API')
     .setVersion('0.1.0')
     .addBearerAuth()
     .build();
